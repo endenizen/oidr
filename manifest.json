@@ -1,0 +1,15 @@
+{
+   "name": "Oidr",
+   "version": "1.4",
+   "description": "Enhancements for http://oidr.net",
+   "content_scripts": [ {
+      "css": [ "oidr.css" ],
+      "js": [ "jquery.min.js", "jquery-ui.min.js", "oidr.js" ],
+      "matches": [ "http://oidr.net/" ]
+   } ],
+   "browser_action": {
+     "default_icon": "paddle.png"
+   },
+   "background_page": "background.html",
+   "permissions": ["tabs"]
+}

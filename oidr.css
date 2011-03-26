@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.records {
+  display: none;
+}
+
+.history_title {
+  display: none;
+}
+
+.fancy .history {
+  padding: 0;
+  height: 100%;
+  overflow-y: scroll;
+  position: absolute;
+  top: 0;
+}
+
+.history table td {
+  padding: 2px;
+  font-size: 11px;
+}
+
+.remove_match {
+  cursor: pointer;
+  font-size: 10px;
+}
+
+.disabled {
+  opacity: .3;
+}
+
+.fancy #header_left {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.odds_grid {
+  position: absolute;
+  right: 0;
+  bottom: 55px;
+}
+
+.odds_grid th {
+  font-size: 11px;
+  text-align: right;
+}
+
+.odds_grid .odds_header th {
+  width: 20px;
+  height: 30px;
+}
+
+.odds_grid .odds_header th div {
+  width: 20px;
+  -webkit-transform:rotate(-90deg);
+  text-align:left;
+}
+
+.odds_grid td {
+  text-align: center;
+  font-size: 11px;
+  width: 20px;
+  padding: 5px;
+}
+
+#showdown {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: white;
+  -webkit-box-shadow: 0 0 5px rgba(0,0,0,.5);
+  padding: 10px;
+  margin: 0 0 10px 10px;
+  border: 1px solid rgba(0,0,0,.5);
+  font-size: 12px;
+}
+
+#showdown .title {
+  font-weight: bold;
+  padding-bottom: 2px;
+  margin-bottom: 3px;
+  border-bottom: 1px solid black;
+  text-align: center;
+}
