@@ -17,6 +17,9 @@ $.extend(Person.prototype, {
     this.score = BASE;
     this.wins = 0;
     this.losses = 0;
+  },
+  url: function() {
+    return 'user/' + this.name + '/';
   }
 });
 
@@ -73,16 +76,22 @@ function calculate() {
   curGame = 0;
   games = $(rows.get().reverse());
   gameList = [];
-  /*lookAtNextGame();*/
   lookAtAllGames();
 }
 
-function makeGrid() {
+function makeGrid(byPoints) {
   sortByScore();
   $('.odds_grid').remove();
   var table = $('<table class="odds_grid"></table>');
   var header = $('<tr class="odds_header"></tr>');
-  header.append('<th></th>');
+
+  header.append(
+    $('<th class="grid_toggle" title="Toggle strength/points"></th>')
+      .text(byPoints ? 'points on win' : '% chance of win')
+      .click(function() {
+        makeGrid(!byPoints);
+      })
+  );
 
   $.each(people, function(lp) {
     var lp = this;
@@ -90,19 +99,16 @@ function makeGrid() {
     header.append('<th><div>' + lp.name + '</div></th>');
     $.each(people, function(tp) {
       var tp = this;
-      var strength = strengthStr = '' + Math.floor((calcExpected(lp.score, tp.score)) * 100);
+      var strength = strengthStr = '' + Math.round((calcExpected(lp.score, tp.score)) * 100);
+      var points = Math.round(getK(lp.score) * (1 - calcExpected(lp.score, tp.score)));
       if(strengthStr.length == 1) strengthStr = '0' + strengthStr;
       var cell = $('<td style="background-color:rgba(0,255,0,0.' + strengthStr + ');"></td>');
       cell.data('player1', lp);
       cell.data('player2', tp);
-      if(lp == tp) {
-        cell.text('-');
-      } else {
-        cell.text(strength);
-      }
+      cell.text((lp == tp ? '-' : (byPoints ? points : strength)));
       row.append(cell);
     });
-    row.prepend('<th>' + lp.name + ' (' + Math.floor(lp.score) + ') ' + lp.wins + ' - ' + lp.losses + '</th>');
+    row.prepend('<th><a href="' + lp.url() + '">' + lp.name + ' (' + Math.round(lp.score) + ') ' + lp.wins + ' - ' + lp.losses + '</a></th>');
     table.append(row);
   });
 
@@ -147,8 +153,8 @@ function showShowdown(player1, player2) {
   if(totalgames == 0) {
     desc.text('no recorded matches');
   } else {
-    var expected = Math.floor((calcExpected(player1.score, player2.score)) * 100);
-    var actual = Math.floor(player1wins / totalgames * 100);
+    var expected = Math.round((calcExpected(player1.score, player2.score)) * 100);
+    var actual = Math.round(player1wins / totalgames * 100);
     desc.text('expected ' + expected + '%, actual ' + actual + '%.')
   }
   showdown.append(title, desc, gameDisplay);
@@ -185,22 +191,11 @@ function lookAtAllGames() {
 }
 
 function lookAtNextGame() {
-  /*if(curGame >= games.length) {
-    makeGrid();
-    return;
-  }*/
-
   var row = $(games[curGame]);
 
   if(row.hasClass('disabled')) {
     return;
-    /*setTimeout(function() {
-      curGame++;
-      lookAtNextGame();
-    }, 0);
-    return;*/
   }
-  row.css('background-color', 'rgb(100, 200, 127)');
 
   var winner = getPerson(row.find('td:eq(0)').text());
   var loser = getPerson(row.find('td:eq(2)').text());
@@ -224,11 +219,12 @@ function lookAtNextGame() {
   var gameStrength = winnerChange / HIGH_K;
 
   row.find('.awarded_points').remove();
-  row.append('<td class="awarded_points"><span>' + Math.floor(winnerChange) + '</span>&nbsp;<span>' + Math.floor(loserChange) + '</span></td>');
+  row.append('<td class="awarded_points"><span>' + Math.round(winnerChange) + '</span>&nbsp;<span>' + Math.round(loserChange) + '</span></td>');
 
   row.find('.remove_match').remove();
   row.append($('<td class="remove_match"><a href="#">X</a></td>').click(function() {
     $(this).parent().toggleClass('disabled');
+    calculate();
     return false;
   }));
   winner.score += winnerChange;
@@ -237,26 +233,13 @@ function lookAtNextGame() {
   winner.wins++;
   loser.losses++;
 
-  var rowA = Math.floor(gameStrength * 100);
+  var rowA = '' + Math.round(gameStrength * 100);
+  if(rowA.length == 1) {
+    rowA = '0' + rowA;
+  }
 
-  /*row.animate({
-    backgroundColor: 'rgb(0,255,0)'
-  }, function() {
-    $(this).css('background-color', 'rgba(0,255,0,0.' + rowA + ')')
-  });*/
   row.css('background-color', 'rgba(0,255,0,0.' + rowA + ')')
-
-  /*setTimeout(function() {
-    curGame++;
-    lookAtNextGame();
-  }, 0);*/
 }
-
-$('<span><a href="#">Recalculate</a>&nbsp;|&nbsp;</span>').prependTo($('#header_right'))
-  .click(function() {
-    calculate();
-    return false;
-  });
 
 calculate();
 

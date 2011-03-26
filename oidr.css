@@ -11,6 +11,14 @@ body {
   display: none;
 }
 
+body.fancy a {
+  color: rgba(50, 70, 50, 1);
+}
+
+.fancy {
+  background-color: #dfd;
+}
+
 .fancy .history {
   padding: 0;
   height: 100%;
@@ -48,17 +56,27 @@ body {
 .odds_grid th {
   font-size: 11px;
   text-align: right;
+  padding-right: 3px;
+}
+
+.odds_grid th.grid_toggle {
+  text-align: center;
+  vertical-align: middle;
+  background-color: rgba(255,255,255,0.5);
+  cursor: pointer;
 }
 
 .odds_grid .odds_header th {
   width: 20px;
   height: 30px;
+  padding: 0;
 }
 
 .odds_grid .odds_header th div {
   width: 20px;
   -webkit-transform:rotate(-90deg);
   text-align:left;
+  margin: 0 auto;
 }
 
 .odds_grid td {
