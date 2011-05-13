@@ -1,6 +1,6 @@
 {
    "name": "Oidr",
-   "version": "1.5",
+   "version": "1.5.1",
    "description": "Enhancements for http://oidr.net",
    "content_scripts": [ {
       "css": [ "oidr.css" ],
